@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
-const Header = ({ course }) => (
-  <h1>{course.name}</h1>
-)
+const Header = ({ course }) => <h1>{course.name}</h1>
 
 const Part = ({ part }) => (
   <p>
@@ -18,32 +16,70 @@ const Content = ({ parts }) => (
   </div>
 )
 
-const Total = ({ parts }) => {
+const CourseTotal = ({ parts }) => {
   const totalExercises = parts.reduce((sum, part) => sum + part.exercises, 0)
-  return (
-    <p><strong>Total number of exercises: {totalExercises}</strong></p>
-  )
+  return <p><strong>Total number of exercises: {totalExercises}</strong></p>
 }
 
-const Statistics = ({ good, neutral, bad }) => {
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>{text}</button>
+)
+
+const StatisticLine = ({ text, value, unit = '' }) => (
+  <p>
+    {text}: {value}{unit}
+  </p>
+)
+
+const FeedbackStatistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad
+  
   if (total === 0) {
     return <p>No feedback given yet</p>
   }
 
-  const average = total > 0 ? (good * 1 + bad * -1) / total : 0
-  const positivePercentage = total > 0 ? (good / total) * 100 : 0
+  const average = (good - bad) / total
+  const positivePercentage = (good / total) * 100
+
   return (
     <div>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Total: {total}</p>
-      <p>Average: {average.toFixed(2)}</p>
-      <p>Positive: {positivePercentage.toFixed(2)}%</p>
+      <StatisticLine text="Good" value={good} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={bad} />
+      <StatisticLine text="Total" value={total} />
+      <StatisticLine text="Average" value={average.toFixed(2)} />
+      <StatisticLine text="Positive" value={positivePercentage.toFixed(2)} unit="%" />
     </div>
   )
 }
+
+const FeedbackSection = () => {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  return (
+    <div>
+      <h1>Give Feedback</h1>
+      <div>
+        <Button handleClick={() => setGood(good + 1)} text="Good" />
+        <Button handleClick={() => setNeutral(neutral + 1)} text="Neutral" />
+        <Button handleClick={() => setBad(bad + 1)} text="Bad" />
+      </div>
+      
+      <h2>Statistics</h2>
+      <FeedbackStatistics good={good} neutral={neutral} bad={bad} />
+    </div>
+  )
+}
+
+const CourseSection = ({ course }) => (
+  <div>
+    <Header course={course} />
+    <Content parts={course.parts} />
+    <CourseTotal parts={course.parts} />
+  </div>
+)
 
 const App = () => {
   const course = {
@@ -63,27 +99,13 @@ const App = () => {
       }
     ]
   }
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  
+
   return (
     <div>
-      <Header course={course} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-
-      <h1>Give Feedback</h1>
-      <div>
-        <button onClick={() => setGood(good + 1)}>Good</button>
-        <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
-        <button onClick={() => setBad(bad + 1)}>Bad</button>
-      </div>
-      
-      <h2>Statistics</h2>
-      <Statistics good={good} neutral={neutral} bad={bad}/>
+      <CourseSection course={course} />
+      <FeedbackSection />
     </div>
   )
 }
 
-export default App  
+export default App
