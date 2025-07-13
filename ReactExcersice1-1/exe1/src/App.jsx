@@ -46,7 +46,9 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
+  const total = good + neutral + bad
+  const average = total > 0 ? (good * 1 + bad * -1) / total : 0
+  const positivePercentage = total > 0 ? (good / total) * 100 : 0
   return (
     <div>
       <Header course={course} />
@@ -65,9 +67,12 @@ const App = () => {
         <p>Good: {good}</p>
         <p>Neutral: {neutral}</p>
         <p>Bad: {bad}</p>
+        <p>Total: {total}</p>
+        <p>Average: {average.toFixed(2)}</p>
+        <p>Positive: {positivePercentage.toFixed(2)}%</p>
       </div>
     </div>
   )
 }
 
-export default App
+export default App  
