@@ -25,6 +25,26 @@ const Total = ({ parts }) => {
   )
 }
 
+const Statistics = ({ good, neutral, bad }) => {
+  const total = good + neutral + bad
+  if (total === 0) {
+    return <p>No feedback given yet</p>
+  }
+
+  const average = total > 0 ? (good * 1 + bad * -1) / total : 0
+  const positivePercentage = total > 0 ? (good / total) * 100 : 0
+  return (
+    <div>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>Total: {total}</p>
+      <p>Average: {average.toFixed(2)}</p>
+      <p>Positive: {positivePercentage.toFixed(2)}%</p>
+    </div>
+  )
+}
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
@@ -46,9 +66,7 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const total = good + neutral + bad
-  const average = total > 0 ? (good * 1 + bad * -1) / total : 0
-  const positivePercentage = total > 0 ? (good / total) * 100 : 0
+  
   return (
     <div>
       <Header course={course} />
@@ -63,14 +81,7 @@ const App = () => {
       </div>
       
       <h2>Statistics</h2>
-      <div>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>Total: {total}</p>
-        <p>Average: {average.toFixed(2)}</p>
-        <p>Positive: {positivePercentage.toFixed(2)}%</p>
-      </div>
+      <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
