@@ -1,0 +1,20 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Build directories
+build/
+dist/
+.next/
+out/
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Lockfiles
+package-lock.json
+yarn.lock
